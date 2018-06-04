@@ -1,0 +1,3 @@
+_builds
+_builds/*
+cmake-scripts/Hello.txt

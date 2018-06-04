@@ -1,0 +1,39 @@
+# To run configure and generate as per UI:
+# This, however, does not preserve the compiler settings.
+# Add _builds to .gitignore
+cmake -H. -B_builds
+
+# For native compiler settings, add flags:
+-DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-7
+
+# To run the native tool build:
+# Note that no Processing CMakeLists.txt message is shown because CMake doesn't need to parse CMakeLists.txt again.
+# foo is output in _builds, and _builds/CMakeFiles/foo.dir contains intermediates.
+cmake --build _builds
+
+# To have different configurations:
+cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Release
+
+# So, putting it together:
+cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-7
+cmake -H. -B_builds/Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-7
+
+# Then you must do:
+cmake --build _builds/Debug
+cmake --build _builds/Release
+
+# For other types of customizations:
+cmake -H. -B_builds/feature-on -DFOO_FEATURE=ON
+cmake -H. -B_builds/feature-off -DFOO_FEATURE=OFF
+
+# Different generators. Writes to _builds/xcode or _builds/make
+# Note that Xcode seems to override choice of compiler.
+cmake -H. -B_builds/xcode -G Xcode
+cmake -H. -B_builds/make -G "Unix Makefiles"
+
+# *** NOTE ***
+# If you edit CMakeLists.txt, you do NOT need to run:
+# cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug blahblah
+# again. All you need to run is:
+cmake --build _builds/Debug
